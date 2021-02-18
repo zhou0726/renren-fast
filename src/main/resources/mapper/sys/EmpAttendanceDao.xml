@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.EmpAttendanceDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.EmpAttendanceEntity" id="empAttendanceMap">
+        <result property="id" column="id"/>
+        <result property="empId" column="emp_id"/>
+        <result property="attendanceDate" column="attendance_date"/>
+        <result property="shouldDay" column="should_day"/>
+        <result property="actualDay" column="actual_day"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+
+</mapper>

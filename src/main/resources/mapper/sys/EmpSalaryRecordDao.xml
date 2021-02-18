@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.EmpSalaryRecordDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.EmpSalaryRecordEntity" id="empSalaryRecordMap">
+        <result property="id" column="id"/>
+        <result property="empId" column="emp_id"/>
+        <result property="amount" column="amount"/>
+        <result property="starAmount" column="star_amount"/>
+        <result property="attendanceAmount" column="attendance_amount"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="operationUserId" column="operation_user_id"/>
+        <result property="recordDate" column="record_date"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+
+</mapper>
