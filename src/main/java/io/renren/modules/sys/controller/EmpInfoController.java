@@ -1,15 +1,16 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.renren.common.utils.SerialUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.renren.modules.sys.entity.EmpInfoEntity;
 import io.renren.modules.sys.service.EmpInfoService;
@@ -31,6 +32,9 @@ public class EmpInfoController {
     @Autowired
     private EmpInfoService empInfoService;
 
+    @Autowired
+    private SerialUtils serialUtils;
+
     /**
      * 列表
      */
@@ -42,6 +46,28 @@ public class EmpInfoController {
         return R.ok().put("page", page);
     }
 
+    @GetMapping("/listByIds")
+    @RequiresPermissions("generator:empinfo:list")
+    public R list(@RequestParam List<Long> empIdList) {
+        if (CollectionUtil.isEmpty(empIdList)) {
+            return R.error("员工数据为空");
+        }
+        QueryWrapper<EmpInfoEntity> whereParams = new QueryWrapper<>();
+        whereParams.in("id",empIdList);
+        List<EmpInfoEntity> list = empInfoService.list(whereParams);
+        return R.ok().put("empList",list);
+    }
+
+    @RequestMapping("/search")
+    @RequiresPermissions("generator:empinfo:search")
+    public R list(@RequestParam String keyword) {
+        try {
+            List<EmpInfoEntity> empInfoEntityList = empInfoService.searchByKeyword(keyword);
+            return R.ok().put("empList",empInfoEntityList);
+        } catch (Exception e) {
+            return R.error(e.getMessage());
+        }
+    }
 
     /**
      * 信息
@@ -60,7 +86,11 @@ public class EmpInfoController {
     @RequestMapping("/save")
     @RequiresPermissions("generator:empinfo:save")
     public R save(@RequestBody EmpInfoEntity empInfo){
-		empInfoService.save(empInfo);
+        String empNo = serialUtils.getEmpNo();
+        empInfo.setNo(empNo);
+        empInfo.setId(null);
+        empInfo.setCreateTime(new Date(System.currentTimeMillis()));
+        empInfoService.save(empInfo);
 
         return R.ok();
     }
@@ -71,6 +101,7 @@ public class EmpInfoController {
     @RequestMapping("/update")
     @RequiresPermissions("generator:empinfo:update")
     public R update(@RequestBody EmpInfoEntity empInfo){
+        empInfo.setCreateTime(null);
 		empInfoService.updateById(empInfo);
 
         return R.ok();

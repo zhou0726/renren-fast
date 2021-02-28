@@ -1,6 +1,7 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -60,6 +61,7 @@ public class EmpRatingController {
     @RequestMapping("/save")
     @RequiresPermissions("generator:emprating:save")
     public R save(@RequestBody EmpRatingEntity empRating){
+        empRating.setCreateTime(new Date());
 		empRatingService.save(empRating);
 
         return R.ok();

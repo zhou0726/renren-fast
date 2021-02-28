@@ -10,6 +10,7 @@ package io.renren.modules.sys.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
+import io.renren.modules.app.entity.UserEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 
 import java.util.List;
@@ -63,4 +64,6 @@ public interface SysUserService extends IService<SysUserEntity> {
 	 * @param newPassword  新密码
 	 */
 	boolean updatePassword(Long userId, String password, String newPassword);
+
+    List<SysUserEntity> searchByKeyword(String keyword) throws Exception;
 }

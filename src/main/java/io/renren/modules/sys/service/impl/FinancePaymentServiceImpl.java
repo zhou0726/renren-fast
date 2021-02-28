@@ -18,11 +18,15 @@ public class FinancePaymentServiceImpl extends ServiceImpl<FinancePaymentDao, Fi
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        IPage<FinancePaymentEntity> page = this.page(
-                new Query<FinancePaymentEntity>().getPage(params),
-                new QueryWrapper<FinancePaymentEntity>()
-        );
 
+        QueryWrapper<FinancePaymentEntity> whereParams = new QueryWrapper<FinancePaymentEntity>();
+        if (params.get("key") != null) {
+            whereParams.like(params.get("key") != null, "type", "%" + params.get("key") + "%");
+            whereParams.or().like(params.get("key") != null, "content", "%" + params.get("key") + "%");
+        }
+        IPage<FinancePaymentEntity> page = this.page(
+                new Query<FinancePaymentEntity>().getPage(params),whereParams
+        );
         return new PageUtils(page);
     }
 

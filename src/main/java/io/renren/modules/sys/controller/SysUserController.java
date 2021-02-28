@@ -8,6 +8,7 @@
 
 package io.renren.modules.sys.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
 import io.renren.common.annotation.SysLog;
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.PageUtils;
@@ -16,6 +17,8 @@ import io.renren.common.validator.Assert;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.common.validator.group.AddGroup;
 import io.renren.common.validator.group.UpdateGroup;
+import io.renren.modules.app.entity.UserEntity;
+import io.renren.modules.sys.entity.EmpInfoEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.form.PasswordForm;
 import io.renren.modules.sys.service.SysUserRoleService;
@@ -56,6 +59,25 @@ public class SysUserController extends AbstractController {
 		PageUtils page = sysUserService.queryPage(params);
 
 		return R.ok().put("page", page);
+	}
+
+	@GetMapping("/listByIds")
+	public R listByIds(@RequestParam List<Long> userIdList) {
+		if (CollectionUtil.isEmpty(userIdList)) {
+			return R.error("用户id列表为空");
+		}
+		List<SysUserEntity> userEntityList = sysUserService.listByIds(userIdList);
+		return R.ok().put("userList",userEntityList);
+
+	}
+	@RequestMapping("/search")
+	public R list(@RequestParam String keyword) {
+		try {
+			List<SysUserEntity> userEntityList = sysUserService.searchByKeyword(keyword);
+			return R.ok().put("userList",userEntityList);
+		} catch (Exception e) {
+			return R.error(e.getMessage());
+		}
 	}
 	
 	/**
@@ -100,6 +122,16 @@ public class SysUserController extends AbstractController {
 		List<Long> roleIdList = sysUserRoleService.queryRoleIdList(userId);
 		user.setRoleIdList(roleIdList);
 		
+		return R.ok().put("user", user);
+	}
+
+	/**
+	 * 通过id获取用户信息
+	 */
+	@GetMapping("/userInfo/{userId}")
+	@RequiresPermissions("sys:user:info")
+	public R userInfo(@PathVariable("userId") Long userId){
+		SysUserEntity user = sysUserService.getById(userId);
 		return R.ok().put("user", user);
 	}
 	

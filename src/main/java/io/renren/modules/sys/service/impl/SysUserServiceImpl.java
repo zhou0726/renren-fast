@@ -15,7 +15,9 @@ import io.renren.common.exception.RRException;
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
+import io.renren.modules.app.entity.UserEntity;
 import io.renren.modules.sys.dao.SysUserDao;
+import io.renren.modules.sys.entity.EmpInfoEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysRoleService;
 import io.renren.modules.sys.service.SysUserRoleService;
@@ -121,7 +123,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 		return this.update(userEntity,
 				new QueryWrapper<SysUserEntity>().eq("user_id", userId).eq("password", password));
 	}
-	
+
+	@Override
+	public List<SysUserEntity> searchByKeyword(String keyword) throws Exception {
+		if (keyword == null || keyword.length()==0) {
+			throw new Exception("关键字不能为空");
+		}
+		QueryWrapper<SysUserEntity> whereParams = new QueryWrapper<>();
+		whereParams.like("username",keyword).or().like("mobile",keyword);
+		return this.list(whereParams);
+	}
+
 	/**
 	 * 检查角色是否越权
 	 */

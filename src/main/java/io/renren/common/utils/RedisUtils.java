@@ -11,6 +11,7 @@ package io.renren.common.utils;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
@@ -77,6 +78,17 @@ public class RedisUtils {
 
     public void delete(String key) {
         redisTemplate.delete(key);
+    }
+
+    public Long incr(String key,long liveTime) {
+        RedisAtomicLong entityIdCounter = new RedisAtomicLong(key, redisTemplate.getConnectionFactory());
+        Long increment = entityIdCounter.getAndIncrement();
+        // 初始设置过期时间
+        if ((increment == null || increment.longValue() == 0) && liveTime > 0) {
+            entityIdCounter.expire(liveTime, TimeUnit.SECONDS);
+        }
+
+        return increment;
     }
 
     /**

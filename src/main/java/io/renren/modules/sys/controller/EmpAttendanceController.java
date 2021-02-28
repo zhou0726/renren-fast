@@ -1,8 +1,10 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,6 +62,9 @@ public class EmpAttendanceController {
     @RequestMapping("/save")
     @RequiresPermissions("generator:empattendance:save")
     public R save(@RequestBody EmpAttendanceEntity empAttendance){
+        empAttendance.setId(null);
+        empAttendance.setCreateTime(new Date(System.currentTimeMillis()));
+        System.out.println(empAttendance);
 		empAttendanceService.save(empAttendance);
 
         return R.ok();
@@ -71,6 +76,7 @@ public class EmpAttendanceController {
     @RequestMapping("/update")
     @RequiresPermissions("generator:empattendance:update")
     public R update(@RequestBody EmpAttendanceEntity empAttendance){
+        empAttendance.setCreateTime(null);
 		empAttendanceService.updateById(empAttendance);
 
         return R.ok();
