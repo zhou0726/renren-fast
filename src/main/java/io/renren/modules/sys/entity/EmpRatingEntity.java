@@ -35,7 +35,7 @@ public class EmpRatingEntity implements Serializable {
 	/**
 	 * 星级
 	 */
-	private String star;
+	private Integer star;
 	/**
 	 * 评级所属年月
 	 */

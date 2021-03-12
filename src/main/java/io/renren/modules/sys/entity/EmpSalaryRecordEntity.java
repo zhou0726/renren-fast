@@ -48,7 +48,7 @@ public class EmpSalaryRecordEntity implements Serializable {
 	/**
 	 * 操作人
 	 */
-	private String operationUserId;
+	private Long operationUserId;
 	/**
 	 * 记录所属年月
 	 */
