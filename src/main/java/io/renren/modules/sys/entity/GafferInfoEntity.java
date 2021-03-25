@@ -68,7 +68,7 @@ public class GafferInfoEntity implements Serializable {
 	/**
 	 * 操作人
 	 */
-	private String operationUserId;
+	private Long operationUserId;
 	/**
 	 * 创建时间
 	 */

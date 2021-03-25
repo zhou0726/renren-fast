@@ -1,6 +1,7 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -27,7 +28,7 @@ import io.renren.common.utils.R;
  */
 @RestController
 @RequestMapping("generator/gafferinfo")
-public class GafferInfoController {
+public class GafferInfoController extends AbstractController {
     @Autowired
     private GafferInfoService gafferInfoService;
 
@@ -60,6 +61,10 @@ public class GafferInfoController {
     @RequestMapping("/save")
     @RequiresPermissions("generator:gafferinfo:save")
     public R save(@RequestBody GafferInfoEntity gafferInfo){
+        if (getUserId() != null) {
+            gafferInfo.setOperationUserId(getUserId());
+        }
+        gafferInfo.setCreateTime(new Date());
 		gafferInfoService.save(gafferInfo);
 
         return R.ok();
@@ -71,6 +76,9 @@ public class GafferInfoController {
     @RequestMapping("/update")
     @RequiresPermissions("generator:gafferinfo:update")
     public R update(@RequestBody GafferInfoEntity gafferInfo){
+        if (getUserId() != null) {
+            gafferInfo.setOperationUserId(getUserId());
+        }
 		gafferInfoService.updateById(gafferInfo);
 
         return R.ok();
