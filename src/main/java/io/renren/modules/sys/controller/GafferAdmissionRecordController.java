@@ -1,6 +1,7 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -60,6 +61,7 @@ public class GafferAdmissionRecordController {
     @RequestMapping("/save")
     @RequiresPermissions("generator:gafferadmissionrecord:save")
     public R save(@RequestBody GafferAdmissionRecordEntity gafferAdmissionRecord){
+        gafferAdmissionRecord.setCreateTime(new Date());
 		gafferAdmissionRecordService.save(gafferAdmissionRecord);
 
         return R.ok();

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.sys.entity.GafferInfoEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface GafferInfoService extends IService<GafferInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    List<GafferInfoEntity> searchByKeyword(String keyword) throws Exception;
 }
 

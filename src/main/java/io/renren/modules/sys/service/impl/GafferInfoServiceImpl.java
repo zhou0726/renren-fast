@@ -1,6 +1,9 @@
 package io.renren.modules.sys.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -24,6 +27,17 @@ public class GafferInfoServiceImpl extends ServiceImpl<GafferInfoDao, GafferInfo
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<GafferInfoEntity> searchByKeyword(String keyword) throws Exception {
+        if (StringUtils.isBlank(keyword)) {
+            throw new Exception("关键字为空");
+        }
+        QueryWrapper<GafferInfoEntity> whereParams = new QueryWrapper<>();
+        whereParams.like("name",keyword);
+        whereParams.or().like("telephone",keyword);
+        return this.list(whereParams);
     }
 
 }
