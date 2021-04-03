@@ -16,5 +16,11 @@ import java.util.Map;
 public interface GafferPaymentRecordService extends IService<GafferPaymentRecordEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void addPayment(GafferPaymentRecordEntity gafferPaymentRecordEntity) throws Exception;
+
+    void updatePayment(GafferPaymentRecordEntity gafferPaymentRecordEntity) throws Exception;
+
+    void removePayment(Long[] ids) throws Exception;
 }
 

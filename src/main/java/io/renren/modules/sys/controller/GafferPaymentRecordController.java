@@ -1,8 +1,8 @@
 package io.renren.modules.sys.controller;
 
-import java.util.Arrays;
 import java.util.Map;
 
+import io.renren.modules.sys.service.GafferInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +30,8 @@ import io.renren.common.utils.R;
 public class GafferPaymentRecordController {
     @Autowired
     private GafferPaymentRecordService gafferPaymentRecordService;
+    @Autowired
+    private GafferInfoService gafferInfoService;
 
     /**
      * 列表
@@ -60,9 +62,12 @@ public class GafferPaymentRecordController {
     @RequestMapping("/save")
     @RequiresPermissions("generator:gafferpaymentrecord:save")
     public R save(@RequestBody GafferPaymentRecordEntity gafferPaymentRecord){
-		gafferPaymentRecordService.save(gafferPaymentRecord);
-
-        return R.ok();
+        try {
+            gafferPaymentRecordService.addPayment(gafferPaymentRecord);
+            return R.ok();
+        } catch (Exception e) {
+            return R.error(e.getMessage());
+        }
     }
 
     /**
@@ -71,9 +76,12 @@ public class GafferPaymentRecordController {
     @RequestMapping("/update")
     @RequiresPermissions("generator:gafferpaymentrecord:update")
     public R update(@RequestBody GafferPaymentRecordEntity gafferPaymentRecord){
-		gafferPaymentRecordService.updateById(gafferPaymentRecord);
-
-        return R.ok();
+        try {
+            gafferPaymentRecordService.updatePayment(gafferPaymentRecord);
+            return R.ok();
+        } catch (Exception e) {
+            return R.error(e.getMessage());
+        }
     }
 
     /**
@@ -82,9 +90,13 @@ public class GafferPaymentRecordController {
     @RequestMapping("/delete")
     @RequiresPermissions("generator:gafferpaymentrecord:delete")
     public R delete(@RequestBody Long[] ids){
-		gafferPaymentRecordService.removeByIds(Arrays.asList(ids));
+		try{
+		    gafferPaymentRecordService.removePayment(ids);
+            return R.ok();
+        } catch (Exception e) {
+            return R.error(e.getMessage());
+        }
 
-        return R.ok();
     }
 
 }
