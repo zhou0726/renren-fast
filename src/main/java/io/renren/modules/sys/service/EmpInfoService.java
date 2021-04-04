@@ -19,5 +19,9 @@ public interface EmpInfoService extends IService<EmpInfoEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     List<EmpInfoEntity> searchByKeyword(String keyword) throws Exception;
+
+    List<EmpInfoEntity> searchByKeywordForSalary(String keyword) throws Exception;
+
+    void resign(Long[] ids) throws Exception;
 }
 

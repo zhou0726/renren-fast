@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.common.utils.DateUtils;
 import io.renren.modules.sys.entity.EmpAttendanceEntity;
@@ -59,7 +61,7 @@ public class EmpSalaryRecordController extends AbstractController {
         if (StringUtils.isNotBlank(key)) {
             // 搜索用户
             QueryWrapper<EmpInfoEntity> empParams = new QueryWrapper<>();
-            empParams.like("name",key);
+            empParams.like("name",key).eq("status",1);
             List<EmpInfoEntity> empInfoEntityList = empInfoService.list(empParams);
             if (CollectionUtil.isEmpty(empInfoEntityList)) {
                 return R.ok();
@@ -139,7 +141,14 @@ public class EmpSalaryRecordController extends AbstractController {
                 throw new Exception("上月工资已生成，请勿重复生成");
             }
             // 判断是否全部参与考勤
-            int empNums = empInfoService.count();
+            // 最后入职时间
+            DateTime lastOnboardTime = DateUtil.beginOfMonth(new Date());
+            // 最后离职时间
+            DateTime lastResignTime = DateUtil.beginOfMonth(DateUtil.lastMonth());
+            QueryWrapper<EmpInfoEntity> empWhereParam = new QueryWrapper<>();
+            // 为符合条件的员工考勤：1：本月初前入职 2：上月初后离职或未离职
+            empWhereParam.gt("onboardTime",lastOnboardTime).and(qw -> qw.lt("resignTime",lastResignTime).or().eq("status",1));
+            int empNums = empInfoService.count(empWhereParam);
             if (empNums == 0) {
                 throw new Exception("员工为空，无法生成工资");
             }
@@ -149,10 +158,10 @@ public class EmpSalaryRecordController extends AbstractController {
             if (empNums > empAttNums) {
                 throw new Exception("生成失败，有"+(empNums - empAttNums) + "名员工未参与考勤");
             }
-            // 获取所有员工信息--本月之前创建的信息
+            // 获取所有员工信息--1：本月初前入职 2：上月初后离职或未离职
             QueryWrapper<EmpInfoEntity> empWhereParams = new QueryWrapper<EmpInfoEntity>();
             empWhereParams.select("id", "basic_salary");
-            empWhereParams.lt("create_time", new Date());
+            empWhereParams.gt("onboardTime",lastOnboardTime).and(qw -> qw.lt("resignTime",lastResignTime).or().eq("status",1));
             List<EmpInfoEntity> empInfoList = empInfoService.list(empWhereParams);
             // 获取所有员工上月考勤信息
             QueryWrapper<EmpAttendanceEntity> empAttenWhereParams = new QueryWrapper<>();

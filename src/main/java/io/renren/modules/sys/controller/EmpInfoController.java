@@ -68,6 +68,15 @@ public class EmpInfoController {
             return R.error(e.getMessage());
         }
     }
+    @RequestMapping("/searchForSalary")
+    public R searchForSalary(@RequestParam String keyword) {
+        try {
+            List<EmpInfoEntity> empInfoEntityList = empInfoService.searchByKeywordForSalary(keyword);
+            return R.ok().put("empList",empInfoEntityList);
+        } catch (Exception e) {
+            return R.error(e.getMessage());
+        }
+    }
 
     /**
      * 信息
@@ -89,7 +98,10 @@ public class EmpInfoController {
         String empNo = serialUtils.getEmpNo();
         empInfo.setNo(empNo);
         empInfo.setId(null);
-        empInfo.setCreateTime(new Date(System.currentTimeMillis()));
+        empInfo.setStatus(1);
+        Date createDate = new Date(System.currentTimeMillis());
+        empInfo.setCreateTime(createDate);
+        empInfo.setOnboardTime(createDate);
         empInfoService.save(empInfo);
 
         return R.ok();
@@ -102,6 +114,7 @@ public class EmpInfoController {
     @RequiresPermissions("generator:empinfo:update")
     public R update(@RequestBody EmpInfoEntity empInfo){
         empInfo.setCreateTime(null);
+        empInfo.setOnboardTime(null);
 		empInfoService.updateById(empInfo);
 
         return R.ok();
@@ -116,6 +129,19 @@ public class EmpInfoController {
 		empInfoService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+    /**
+     * 离职
+     */
+    @RequestMapping("/resign")
+    public R resign(@RequestBody Long[] ids){
+        try {
+            empInfoService.resign(ids);
+
+            return R.ok();
+        } catch (Exception e) {
+            return R.error(e.getMessage());
+        }
     }
 
 }

@@ -42,6 +42,10 @@ public class EmpInfoEntity implements Serializable {
 	 */
 	private Long age;
 	/**
+	 * 状态：1-在职，0-离职
+	 */
+	private Integer status;
+	/**
 	 * 科室
 	 */
 	private String department;
@@ -65,5 +69,13 @@ public class EmpInfoEntity implements Serializable {
 	 * 创建时间
 	 */
 	private Date createTime;
+	/**
+	 * 入职时间
+	 */
+	private Date onboardTime;
+	/**
+	 * 离职时间
+	 */
+	private Date resignTime;
 
 }
