@@ -3,6 +3,7 @@ package io.renren.modules.sys.service.impl;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -21,9 +22,15 @@ public class GafferInfoServiceImpl extends ServiceImpl<GafferInfoDao, GafferInfo
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        String gafferIdListStr = (String) params.get("gafferIdList");
+        QueryWrapper<GafferInfoEntity> whereParams = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(gafferIdListStr)) {
+            String[] gafferIds = gafferIdListStr.split(",");
+            whereParams.in("id", Arrays.stream(gafferIds).toArray());
+        }
         IPage<GafferInfoEntity> page = this.page(
                 new Query<GafferInfoEntity>().getPage(params),
-                new QueryWrapper<GafferInfoEntity>()
+                whereParams
         );
 
         return new PageUtils(page);
