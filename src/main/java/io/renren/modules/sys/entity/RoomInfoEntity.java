@@ -38,8 +38,12 @@ public class RoomInfoEntity implements Serializable {
 	 */
 	private BigDecimal price;
 	/**
-	 * 当前状态：0-空置 1-占用
+	 * 总床位数
 	 */
-	private Integer status;
+	private Integer totalNum;
+	/**
+	 * 剩余床位数
+	 */
+	private Integer leftNum;
 
 }
