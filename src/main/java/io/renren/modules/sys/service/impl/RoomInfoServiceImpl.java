@@ -1,6 +1,8 @@
 package io.renren.modules.sys.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -24,6 +26,15 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoDao, RoomInfoEntity
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<RoomInfoEntity> search(String keyword) {
+        QueryWrapper<RoomInfoEntity> whereParam = new QueryWrapper<>();
+        whereParam.like("room_no",keyword).or().like("type",keyword);
+        List<RoomInfoEntity> list = this.list(whereParam);
+
+        return list;
     }
 
 }

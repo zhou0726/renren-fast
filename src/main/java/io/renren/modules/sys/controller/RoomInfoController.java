@@ -1,6 +1,7 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -85,6 +86,12 @@ public class RoomInfoController {
 		roomInfoService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+    @RequestMapping("/search")
+    public R search(@RequestParam("keyword") String keyword) {
+        List<RoomInfoEntity> searchResult = roomInfoService.search(keyword);
+        return R.ok().put("roomInfoList",searchResult);
     }
 
 }
