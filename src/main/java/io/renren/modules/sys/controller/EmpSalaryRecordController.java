@@ -147,7 +147,7 @@ public class EmpSalaryRecordController extends AbstractController {
             DateTime lastResignTime = DateUtil.beginOfMonth(DateUtil.lastMonth());
             QueryWrapper<EmpInfoEntity> empWhereParam = new QueryWrapper<>();
             // 为符合条件的员工考勤：1：本月初前入职 2：上月初后离职或未离职
-            empWhereParam.gt("onboardTime",lastOnboardTime).and(qw -> qw.lt("resignTime",lastResignTime).or().eq("status",1));
+            empWhereParam.gt("onboard_time",lastOnboardTime).or().lt("resign_time",lastResignTime).or().eq("status",1);
             int empNums = empInfoService.count(empWhereParam);
             if (empNums == 0) {
                 throw new Exception("员工为空，无法生成工资");
