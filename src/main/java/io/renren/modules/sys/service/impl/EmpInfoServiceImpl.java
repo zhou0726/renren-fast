@@ -61,7 +61,7 @@ public class EmpInfoServiceImpl extends ServiceImpl<EmpInfoDao, EmpInfoEntity> i
         // 最后离职时间
         DateTime lastResignTime = DateUtil.beginOfMonth(DateUtil.lastMonth());
         QueryWrapper<EmpInfoEntity> whereParams = new QueryWrapper<>();
-        whereParams.gt("onboardTime",lastOnboardTime).and(qw -> qw.lt("resignTime",lastResignTime).or().eq("status",1));
+        whereParams.eq("status",1);
         whereParams.like("name",keyword).or().like("no",keyword).orderByAsc("id");
         return this.list(whereParams);
     }
