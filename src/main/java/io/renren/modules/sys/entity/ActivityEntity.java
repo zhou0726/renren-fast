@@ -35,7 +35,7 @@ public class ActivityEntity implements Serializable {
 	/**
 	 * 发布人
 	 */
-	private String operationUserId;
+	private Long operationUserId;
 	/**
 	 * 创建时间
 	 */

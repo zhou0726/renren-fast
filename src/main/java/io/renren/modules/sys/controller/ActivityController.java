@@ -1,6 +1,7 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -27,7 +28,7 @@ import io.renren.common.utils.R;
  */
 @RestController
 @RequestMapping("generator/activity")
-public class ActivityController {
+public class ActivityController extends AbstractController {
     @Autowired
     private ActivityService activityService;
 
@@ -60,6 +61,8 @@ public class ActivityController {
     @RequestMapping("/save")
     @RequiresPermissions("generator:activity:save")
     public R save(@RequestBody ActivityEntity activity){
+        activity.setOperationUserId(getUserId());
+        activity.setCreateTime(new Date());
 		activityService.save(activity);
 
         return R.ok();
