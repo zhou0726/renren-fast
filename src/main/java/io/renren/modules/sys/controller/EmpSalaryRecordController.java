@@ -123,7 +123,7 @@ public class EmpSalaryRecordController extends AbstractController {
      * 生成上个月员工工资
      *  员工工资 = 考勤工资 + 评级工资
      *      考勤工资 = 基本工资 × （ 实到天数 / 应到天数）
-     *      评级工资 =  总star数 / 评级人数 × 1% × 基本工资
+     *      现：评级工资 =  基本工资 * 绩效系数 [0-1] 0.2 (1-2] 0.4 (2-3] 0.6 (3-4] 0.8  (4-5] 1
      *
      * @return
      */
@@ -209,13 +209,24 @@ public class EmpSalaryRecordController extends AbstractController {
                     empSalaryRecordEntity.setAttendanceAmount(BigDecimal.ZERO);
                 }
                 if (CollectionUtil.isNotEmpty(empRatingEntityList)) {
-                    // 评级工资 =  总star数 / 评级人数 * 1% * 基本工资
+                    // 评级工资 =  基本工资 * 绩效系数 [0-1] 0.2 (1-2] 0.4 (2-3] 0.6 (3-4] 0.8  (4-5] 1
                     int sumStar = empRatingEntityList.stream().mapToInt(EmpRatingEntity::getStar).sum();
                     long startCount = empRatingEntityList.stream().count();
-                    BigDecimal starAmount = BigDecimal.valueOf(sumStar).
-                            divide(BigDecimal.valueOf(startCount),RoundingMode.HALF_UP).
-                            multiply(BigDecimal.valueOf(0.01)).
-                            multiply(empSalaryRecordEntity.getAmount());
+                    Double avgStar = BigDecimal.valueOf(sumStar).
+                            divide(BigDecimal.valueOf(startCount), RoundingMode.HALF_UP).doubleValue();
+                    BigDecimal cap;
+                    if (avgStar <= 1) {
+                        cap = BigDecimal.valueOf(0.2);
+                    } else if (avgStar <= 2) {
+                        cap = BigDecimal.valueOf(0.4);
+                    } else if (avgStar <= 3) {
+                        cap = BigDecimal.valueOf(0.6);
+                    } else if (avgStar <= 4) {
+                        cap = BigDecimal.valueOf(0.8);
+                    } else {
+                        cap = BigDecimal.valueOf(1.0);
+                    }
+                    BigDecimal starAmount = cap.multiply(empSalaryRecordEntity.getAmount());
                     empSalaryRecordEntity.setStarAmount(starAmount);
                 } else {
                     empSalaryRecordEntity.setStarAmount(BigDecimal.ZERO);
