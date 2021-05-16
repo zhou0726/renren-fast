@@ -1,6 +1,7 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -60,6 +61,7 @@ public class RoomChangeController {
     @RequestMapping("/save")
     @RequiresPermissions("generator:roomchange:save")
     public R save(@RequestBody RoomChangeEntity roomChange){
+        roomChange.setCreateTime(new Date());
 		roomChangeService.save(roomChange);
 
         return R.ok();

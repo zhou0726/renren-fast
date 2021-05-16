@@ -1,8 +1,10 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
+import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +29,7 @@ import io.renren.common.utils.R;
  */
 @RestController
 @RequestMapping("generator/roomcheckrecord")
-public class RoomCheckRecordController {
+public class RoomCheckRecordController extends AbstractController {
     @Autowired
     private RoomCheckRecordService roomCheckRecordService;
 
@@ -60,7 +62,9 @@ public class RoomCheckRecordController {
     @RequestMapping("/save")
     @RequiresPermissions("generator:roomcheckrecord:save")
     public R save(@RequestBody RoomCheckRecordEntity roomCheckRecord){
-		roomCheckRecordService.save(roomCheckRecord);
+        roomCheckRecord.setOperationId(getUserId());
+        roomCheckRecord.setCreateTime(new Date());
+        roomCheckRecordService.save(roomCheckRecord);
 
         return R.ok();
     }
