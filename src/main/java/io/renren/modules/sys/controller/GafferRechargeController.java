@@ -1,6 +1,7 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -60,6 +61,7 @@ public class GafferRechargeController {
     @RequestMapping("/save")
     @RequiresPermissions("generator:gafferrecharge:save")
     public R save(@RequestBody GafferRechargeEntity gafferRecharge){
+        gafferRecharge.setCreateTime(new Date());
 		gafferRechargeService.save(gafferRecharge);
 
         return R.ok();

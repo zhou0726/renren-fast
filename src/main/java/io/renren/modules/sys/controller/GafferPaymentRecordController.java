@@ -1,5 +1,6 @@
 package io.renren.modules.sys.controller;
 
+import java.util.Date;
 import java.util.Map;
 
 import io.renren.modules.sys.service.GafferInfoService;
@@ -63,6 +64,7 @@ public class GafferPaymentRecordController {
     @RequiresPermissions("generator:gafferpaymentrecord:save")
     public R save(@RequestBody GafferPaymentRecordEntity gafferPaymentRecord){
         try {
+            gafferPaymentRecord.setCreateTime(new Date());
             gafferPaymentRecordService.addPayment(gafferPaymentRecord);
             return R.ok();
         } catch (Exception e) {

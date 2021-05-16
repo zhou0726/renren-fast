@@ -1,6 +1,7 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -60,6 +61,7 @@ public class FinancePaymentController {
     @RequestMapping("/save")
     @RequiresPermissions("generator:financepayment:save")
     public R save(@RequestBody FinancePaymentEntity financePayment){
+        financePayment.setCreateTime(new Date());
 		financePaymentService.save(financePayment);
 
         return R.ok();

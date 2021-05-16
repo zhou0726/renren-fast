@@ -92,6 +92,7 @@ public class EmpSalaryRecordController extends AbstractController {
     @RequestMapping("/save")
     @RequiresPermissions("generator:empsalaryrecord:save")
     public R save(@RequestBody EmpSalaryRecordEntity empSalaryRecord){
+        empSalaryRecord.setCreateTime(new Date());
 		empSalaryRecordService.save(empSalaryRecord);
 
         return R.ok();
